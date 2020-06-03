@@ -1,0 +1,228 @@
+ADBMS :ASSIGNMENT1
+***********************************************************************
+Question1:
+
+1)create or replace trigger T1
+ before insert on emp_pdetails
+ begin
+ if(to_Char(sysdate,'HH24:MI') not between '04:30' and '18:00') then
+ raise_application_error(-20000,'Can only login in Office hours 8:30am to 06:00pm');
+ end if;
+ end;
+ /
+ 
+2)create or replace trigger T2
+ before insert on emp_pdetails
+ for each row
+ begin
+ if :new.eage<25 then
+ raise_application_error(-20001,'Employee age must be greater than 25');
+ end if;
+ end;
+ /
+ 
+3)create or replace function F1
+  return number
+  is 
+  a number(3);
+  begin
+  select promotions into a
+  from emp_odetails
+  where eno=4;
+  return a;
+  end;
+  /
+
+  declare
+  c number(2);
+  begin
+  c:=F1();
+  dbms_output.put_line('Promotions are:'||c);
+  end;
+  /
+  
+4)create or replace procedure P1
+ (a in emp_odetails.eno%type,
+  b in emp_odetails.salary%type,
+  c in emp_odetails.grade%type)
+  is
+  vdiff number(10);
+  vnewsal number(10);
+  vpercentage number(10);
+  begin
+   select salary,grade into b,c from emp_odetails where eno=a;
+   if (c='A') then
+    vnewsal:= sal+1000;
+    vdiff:=vnewsal-b;
+   elseif (c='B') 
+    vnewsal:=sal+500;
+    vdiff:=vnewsal-b;
+   else
+   vnewsal:= sal+100;
+   vdiff:=vnewsal-b;
+   end if;
+    vpercentage:=(vdiff/b)*100;
+    dbms_output.put_line('Percentage increase in salary:'||vpercentage);
+  end;
+  /
+  
+5)select count(increments) from emp_odetails
+  where hiredate between '01-JAN-2018' and '31-DEC-2018';
+
+6)create or replace function F2
+return number
+is 
+a emp_odetails.eno%type;
+b emp_odetails.salary%type;
+c emp_odetails.leaves%type;
+begin
+select eno,salary,leaves into a,b,c from emp_odetails;
+dbms_output.put_line('The no of leaves allowed is :2');
+if(c>2) then
+b:=b+(c*400);
+end if;
+return b;
+end;
+/
+
+  declare
+  c number(2);
+  begin
+  c:=F2();
+  end;
+  /
+  
+7)select * from emp_pdetails join emp_odetails
+   on emp_pdetails.eno=emp_odetails.eno
+   where fname='sai';  
+  
+8)select count(eno) from emp_odetails where hiredate between
+ '01-JAN-2018' AND '31-DEC-2018';
+ 
+9)select lname from emp_pdetails join emp_odetails
+  on emp_pdetails.eno=emp_odetails.eno
+  where salary>
+  (select avg(salary)
+  from emp_odetails) order by salary ASC);
+    
+10)declare	
+cursor c1 is select salary,promotions from emp_odetails;
+vsal emp_odetails.salary%type;
+vpro emp_odetails.promotions%type;
+begin
+open c1;
+LOOP
+fetch c1 into vsal,vpro;
+if(vpro>0) then
+vsal:=(vsal*1.1);
+exit when c1%notfound;
+dbms_output.put_line(vsal);
+end if;
+END LOOP;
+close c1;
+end;
+/	  
+  
+11)create view V10 as select *from emp_odetails where salary >50000;
+    
+  create view V1 as select *from emp_odetails where desg='PMNGR';
+  grant insert,update,delete,select on emp_odetails  to V1;
+
+12)create or replace trigger T3
+ before delete on emp_pdetails
+ declare
+  veno number(3);
+  a number(3);
+  b varchar2(10);
+  c varchar2(10);
+  d number(2);
+  begin
+   select eno,fname,lname,eage into a,b,c,d from emp_pdetails;
+   update backupp set eno=a,fname=b,lname=c,eage=d where eno=veno;
+   dbms_output.put_line('Record backuped');
+  end;
+  /
+---------------------------------------------------------------------------------------
+Question2:
+
+Data Control Language:
+ To control the user access in database ,related to security issues
+ It allows restricts the user in accessing the database
+ we have two commands
+ 1)Grant: Giving the permissions
+ 2)Revoke: Releasing the permissions 
+ (cancel previously granted/denied privileges)
+ Can be apploed on user level/object level(DML)
+ 
+ ex:(user level)
+  create user <user-name> identified by <passwordd>;
+  grant create session to <user-name>;
+  revoke create session to <user-name>;
+   
+   (object level)
+  grant insert/delete/update/select on <table-name>  to <user-name/role-name>;
+  revoke insert/delete/update/select on <table-name>  to <user-name/role-name>;
+   
+--------------------------------------------------------------------------------------------
+Question3:
+
+Triggers:
+create or replace trigger T5
+before insert on emp_pdetails
+begin
+if(delete ) then
+rollback;
+end if;
+end;
+/
+ 
+Cursors:
+declare
+cursor c5 is select eno,dno from emp_odetails;
+v1 emp_odetails.eno%type;
+v2 emp_odetails.dno%type;
+begin
+open c5;
+fetch c5 into v1,v2;
+dbms_output.put_line(v1||':'||v2);
+commit;
+close c5;
+end;
+/
+ 
+Procedures:
+  create or replace procedure p5
+  (a IN number,b IN number)
+  is
+  vamount :=&amount;
+  begin
+  select eno,salary into a,b from emp_odetails;
+  update emp_odetails set salary=salary+vamount
+  where empno=a;
+  commit;
+  select salary from emp_odetails where empno=a;
+  end;
+  /
+
+view:
+ create view  V5 as select * from emp_pdetails;
+
+DCL:
+
+revoke select on emp_pdetails to mtech;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,236 @@
+
+pl/sql
+************************
+Triggers:
+ Course of action which implictly 
+ executes before/after the insert/delete/update(DDL/DML)
+ operation,which is similar as procedure,executed
+ implictly by oracle server.
+ 
+ Types:
+ 1.DML:table level
+ 2.DDL:database level
+ 
+ Uses:
+ 1.To control DML
+ 2.To implement complex business rules and violations
+ 3.Maintain replicas
+ 4.Generating values for primary key
+ 
+ Syntax:
+ create[or replace] trigger trigger-name
+ [before|after|instead of]
+ [insert[or]|update[or]|delete] on table-name(database name if DDL)
+ //[create[or]|drop [or]|truncate] for DDL
+ [referencing old as 0 new as n]
+ [for each row][when (condition)]
+ [declaree <declare section>]
+ begin
+ [Exception]
+ end;
+ /
+
+ Levels of DML triggers
+ 1.statement level:will execute only once
+ 2.row level      :for each row
+ 
+ bind variables(rowtype var):
+ :old :new
+ 
+ *backup the database https://www.youtube.com/watch?v=JKOIDnm-X6Q  time:18min
+ 
+We can have N number of triggers on a table but the maximum type of triggers on a single table can be 3*2*2=12 that is the division is done as
+Insert/Update/Delete= 3
+Before/After= 2
+Row Level/Statement Level=2
+
+****************************************************************************************************************** 
+Cursors:
+ There are two types 
+  1.Implict:by oracle 
+  2.Explict:by user
+  
+ Explict cursor:
+>%type=only one coloumn
+>%rowtype=complete 1 record
+>cursor=all records 
+ 
+ steps:
+ 1)Declare the cursor
+ 2)open the cursor
+ 3)fetch the cursor
+ 4)close the cursor
+ 
+ 1)cursor c1 is select *from emp_odetails;
+   c<-- select *from emp_odetails;
+ 2)open c1;
+   now the select stmt is submitted to oracle server
+   and the data retrived is stored in context area,
+   which is a temp mem area,which is a Program Global Area.
+ 3) fetch   c1 into <variables>;
+    fetching records from the cursor,whih fetchs one record at a time 
+ 4)close c1;
+ 
+ ex:
+ decalre
+  cursor c1 is select ename,sal from emp;
+   vename emp.ename%type;
+  vsal emp.ssal%type;
+ begin
+  open c1;
+  loop
+    fetch c1 into vename,vsal;
+	exit when c1%notfound;
+	dbms_output.put_line(vename||' '||vsal);
+  end loop;
+  close c1;
+ end;
+ /
+	
+declare	
+cursor c1 is select salary,promotions from emp_odetails;
+vsal emp_odetails.salary%type;
+vpro emp_odetails.promotions%type;
+begin
+open c1;
+LOOP
+fetch c1 into vsal,vpro;
+if(vpro>0) then
+vsal:=(vsal*1.1);
+exit when c1%notfound;
+dbms_output.put_line(vsal);
+end if;
+END LOOP;
+close c1;
+end;
+/	
+ 
+****************************************************************************************************
+ Function:
+ A user defined function is also a named pl/sql block that 
+ accepts some input perform some calculations and must return a 
+ value
+ 
+ Syntax:
+ create or replace function function-name(parameters if any)
+ return<type>
+ is
+  variables;
+ begin
+  statements;
+  return<expr>;
+  end;
+  /
+  
+  create or replace function F1(a in emp_odetails.eno%type,
+  b in emp_odetails.promotions%type)
+  return number
+  is 
+  begin
+  select promotions into b
+  from emp_odetails
+  where eno=a;
+  dbms_output.put_line('The promotions of'||a||'are');
+  return b;
+  end;
+  /
+ 
+***************************************************************************************
+View:
+ It is a virtual/logical table for the base table.
+ will not store the data but the select query statement is only stored
+ It will create with the help of "select" statement.
+ 
+ types:
+ 1)Simple view:
+   When we access the required data from a single base table.
+   It can support all DML operations,also called UPDATABLE view. 
+   
+ 2)Complex view
+   When we access the required data form multiple base tables
+   It doesnot not support all DML operations on multiple base tables,NON-UPDATABLE views.
+   
+ Syntax:
+ create view <view name> as select * from <table-name>[where (condition)];
+
+***************************************************************************************
+Procedures:
+ A procedure is also a named pl/sql block that accepts some input in
+ the form of parameters and performs some task and may/may not 
+ returns a vlaue
+ 
+ Syntax:
+ create procedure p1(parameters)
+ is
+  variables;
+ begin
+  statements;
+  end;
+  /
+  
+  parameters types:
+  IN |OUT |IN OUT
+  
+  create or replace procedure p1
+  (a IN OUT number,b IN varchar2)
+  is
+  begin
+  update emp set sal=sal+amt
+  where empno=a;
+  commit;
+  select sal from emp where empno=a;
+  end;
+  /
+  
+  create or replace procedure p1
+  (a in number,b in number,c in varchar2)
+  is
+  vdiff number(10);
+  vavg number(10);
+  begin
+   
+  
+**********************************************************************************************
+first we need to create a user
+>create user U1 identified by U1 
+ default tablespace users
+ quota unlimited on users;
+>grant dba to ADBMS;
+
+REVOKE:
+The following types of privileges can be revoked:
+Delete data from a specific table.
+Insert data into a specific table.
+Create a foreign key reference to the named table or to a subset of columns from a table.
+Select data from a table, view, or a subset of columns in a table.
+Create a trigger on a table.
+Update data in a table or in a subset of columns in a table.
+Run a specified routine (function or procedure).
+Use a sequence generator or a user-defined type.
+***********************************************************************************************8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
