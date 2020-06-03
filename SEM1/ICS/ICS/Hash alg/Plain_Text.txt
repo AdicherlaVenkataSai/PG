@@ -1,0 +1,21 @@
+HELLO I AM IN SVNIT
+
+enc -aes-256-ecb -a -salt -in plain_Text.txt -out cipher.txt
+
+req -x509 -nodes -sha256 -days 365 -newkey rsa:1024 -keyout test.key -out test.crt
+x509 -noout -text -in test.crt
+
+D:\M-Tech\Practicals\ICS\Assignment4>openssl dgst -sha1 test1.txt
+SHA1(test1.txt)= db8ac1c259eb89d4a131b253bacfca5f319d54f2
+
+D:\M-Tech\Practicals\ICS\Assignment4>openssl dgst -sha1 test2.txt
+SHA1(test2.txt)= a5c3e25fd5a20efd9458d6c3843548bd48f03e5b
+
+D:\M-Tech\Practicals\ICS\Assignment4>openssl dgst -sha1 test1.txt
+SHA1(test1.txt)= db8ac1c259eb89d4a131b253bacfca5f319d54f2
+
+D:\M-Tech\Practicals\ICS\Assignment4>openssl dgst -md5 test1.txt
+MD5(test1.txt)= 68e109f0f40ca72a15e05cc22786f8e6
+
+D:\M-Tech\Practicals\ICS\Assignment4>openssl dgst -md5 test2.txt
+MD5(test2.txt)= ba66365a89c0a8b23ab49fb82a520a76
