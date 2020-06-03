@@ -1,0 +1,6 @@
+Topics/Portion for the MidSem Examination:
+1. Introduction,
+2. Software Processes and Models,
+3. Static Analysis
+4. Verification using Model Checking/SPIN&PROMELA,
+5. Requirements Specifications (Natural Language, Using FSMs, Using Petrinets (except the Elevator Controller Model).
