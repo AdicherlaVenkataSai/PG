@@ -1,0 +1,1 @@
+So far I have declared the the variable for the shift and have made 2 separate strings for lower case letters and uppercase letters. I'm not too sure where to proceed from here. Any help would be greatly appreciated
