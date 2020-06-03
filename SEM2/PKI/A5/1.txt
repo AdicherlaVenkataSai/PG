@@ -1,0 +1,34 @@
+1.
+HSTS: http:// is redirected to https://
+http:// has port 80. https:// has port 443
+we have given a redirect (301 permanent redirect), 
+as we request using http:// the handshake is done using https://
+
+1. http://httpd.apache.org/docs/current/rewrite/avoid.html#redirect (port 
+2. https://hacksandsecurity.org/(port 80) but the connection is https://  : no browsing history
+3. https://www.facebook.com/(port 443)
+
+redirects are saved in our cache memory(2)
+browser stores the redirects in memory
+
+Man in the middle attack: SSL Strip
+
+To avoid this attack we use HSTS
+. once enabled never allows http://
+. prevents cookie stealing
+. avoids ssl stripping
+(a)HSTS allows a site to request that it always be contacted over HTTPS. 
+HSTS is supported in google, 
+twitter, facebook, Safari,
+ Opera, Edge and IE ,
+presidentialinnovationfellows.gov, 
+deaecom.gov, budgetlob.gov, 
+indianaffairs.gov,hireverts.gov
+(b) fbf.gov
+    fedidcard.gov
+    rl.gov
+    pracomment.gov
+    www.nwolb.com
+    https://bank.barclays.co.uk/
+
+chrome://net-internals/#hsts(add the site to hsts, enabling redirect)

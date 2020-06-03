@@ -1,0 +1,56 @@
+step1:  install xampp
+
+step2: intsall openssl
+
+step3: C:\xampp\apache\bin\openssl.exe
+       C:\xampp\apache\conf\openssl.cnf
+
+step4: open cmd and cd to "C:\xampp\apache\bin\"
+
+step5: openssl genrsa -aes256 -out private.key 2048 
+       # rsa private key of 256 bit aes encryption
+	pass phrase = pass
+ 
+step6: openssl rsa -in private.key -out private.key
+	pass phrase = pass
+	writing RSA key
+
+step7: creating a certificate
+	openssl req -new -x509 -nodes -sha1 -key private.key -out certificate.crt -days 36500 -config C:\xampp\apache\conf\openssl.cnf
+	You are about to be asked to enter information that will be incorporated
+	into your certificate request.
+	What you are about to enter is what is called a Distinguished Name or a DN.
+	There are quite a few fields but you can leave some blank
+	For some fields there will be a default value,
+	If you enter '.', the field will be left blank.
+	-----
+	Country Name (2 letter code) [AU]:IN
+	State or Province Name (full name) [Some-State]:HYD
+	Locality Name (eg, city) []:MNCL
+	Organization Name (eg, company) [Internet Widgits Pty Ltd]:SVNIT
+	Organizational Unit Name (eg, section) []:COED
+	Common Name (e.g. server FQDN or YOUR name) []:AVS
+	Email Address []:AVS@GMAIL.COM
+
+step8: goto httpd.conf and uncomment the below lines
+	LoadModule ssl_module modules/mod_ssl.so(177)
+	Include conf/extra/httpd-ssl.conf(545)
+	LoadModule socache_shmcb_module modules/mod_socache_shmcb.so(175)
+	
+	in php.ini file
+	uncomment  extension=php_openssl.dll
+
+step9: C:\xampp\apache\conf\extra\httpd-ssl.conf
+	open and find <VirtualHost _default_:443>
+	changes to be done are(at uncommented lilnes only)   
+				SSLCertificateFile "C:/xampp/apache/conf/key/certificate.crt"(144)
+				SSLCertificateKeyFile "C:/xampp/apache/conf/key/private.key"(154)
+
+start the xampp server and apache
+go search for localhost
+we'll find warning and can check the certificate(not secure)
+
+	
+ 
+	
+
